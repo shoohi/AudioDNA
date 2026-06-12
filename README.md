@@ -5,7 +5,9 @@ data science portfolio project. Upload a sound → see its spectrogram, get a
 predicted category, and find the 5 most similar sounds in a library of ~900
 Creative Commons game SFX from [Freesound.org](https://freesound.org).
 
-> 📸 *Screenshots coming soon — `reports/screenshots/`*
+<img width="1893" height="871" alt="image" src="https://github.com/user-attachments/assets/ed8ea3e1-3d98-42c2-a9d9-62a6d046606c" />
+<img width="1864" height="900" alt="image" src="https://github.com/user-attachments/assets/ac4fbe3c-0a76-4c67-a418-aa0f10a65256" />
+
 
 ## How it works
 
