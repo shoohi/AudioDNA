@@ -1,0 +1,17 @@
+AudioDNA — random forest evaluation (2026-06-12)
+Baseline logistic regression accuracy: 0.622
+Random forest params: {'max_depth': 20, 'min_samples_leaf': 1, 'n_estimators': 200}
+Random forest test accuracy: 0.772
+
+              precision    recall  f1-score   support
+
+      impact      0.857     0.600     0.706        30
+   footsteps      0.815     0.733     0.772        30
+    ambience      0.852     0.767     0.807        30
+          ui      0.800     0.800     0.800        30
+   explosion      0.703     0.867     0.776        30
+      weapon      0.684     0.867     0.765        30
+
+    accuracy                          0.772       180
+   macro avg      0.785     0.772     0.771       180
+weighted avg      0.785     0.772     0.771       180
