@@ -53,7 +53,17 @@ def extract_feature_vector(filepath) -> dict[str, float]:
     # everything to a common rate so features are comparable across files.
     y, sr = librosa.load(filepath, sr=SAMPLE_RATE, mono=True)
     y, _ = librosa.effects.trim(y, top_db=TRIM_DB)
+    return features_from_audio(y, sr)
 
+
+def features_from_audio(y: "np.ndarray", sr: int) -> dict[str, float]:
+    """Feature dict from an already-loaded (and trimmed) mono signal.
+
+    Split out from extract_feature_vector so the Streamlit app can run the
+    *identical* feature code on uploaded audio — if the app computed
+    features its own way, the model would silently see a different input
+    distribution than it was trained on.
+    """
     if len(y) < 2048:  # shorter than one analysis frame -> nothing to measure
         raise ValueError("audio is empty or near-empty after silence trimming")
 

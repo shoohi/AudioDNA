@@ -1,0 +1,4 @@
+# Server-side upload cap (MB). The app also checks file size itself, but
+# this stops oversized uploads before they ever reach our code.
+[server]
+maxUploadSize = 10
