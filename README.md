@@ -129,4 +129,6 @@ attribution display intact.
 - Approximate nearest neighbors (e.g. `hnswlib`) if the library grows
   beyond what brute-force cosine handles comfortably.
 
+  Run Demo Now! https://audiodna-99qbnnnymfu63neqxjkpvs.streamlit.app/
+
 
