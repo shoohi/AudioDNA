@@ -1,0 +1,28 @@
+# Secrets — never commit the real API key
+.env
+
+# Data: raw audio and the SQLite database are reproducible from the
+# collection/extraction scripts, and the audio is licensed per-file by
+# Freesound uploaders, so it must not be redistributed via git.
+data/raw/*
+!data/raw/.gitkeep
+data/*.db
+data/*.db-journal
+
+# Trained model artifacts (binary, reproducible via src/train.py)
+models/*.joblib
+models/*.pkl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
