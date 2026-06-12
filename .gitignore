@@ -26,6 +26,10 @@ venv/
 # Test cache
 .pytest_cache/
 
+# Demo bundle (built by scripts/make_demo_bundle.py, uploaded as a
+# GitHub Release asset — never committed)
+demo_bundle.zip
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

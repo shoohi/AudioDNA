@@ -127,6 +127,37 @@ attribution display intact.
 - Approximate nearest neighbors (e.g. `hnswlib`) if the library grows
   beyond what brute-force cosine handles comfortably.
 
-## Deployment
+## Deployment (Streamlit Community Cloud)
 
-*(Streamlit Community Cloud instructions coming in the final phase.)*
+The repo deliberately contains no audio, database, or model binaries, so
+the deployed app bootstraps itself from a small **demo bundle** — 72 CC0
+(public-domain) sounds (12 per category) plus the trained model, ~8 MB —
+hosted as a GitHub Release asset and downloaded on first boot.
+
+1. Build the bundle locally (requires the full pipeline to have run):
+
+   ```bash
+   python -m scripts.make_demo_bundle      # writes demo_bundle.zip
+   ```
+
+2. Push this repo to GitHub, then create a release and attach the zip:
+
+   ```bash
+   gh release create v1.0 demo_bundle.zip --title "AudioDNA demo bundle"
+   ```
+
+3. On [share.streamlit.io](https://share.streamlit.io), deploy the repo
+   with `app.py` as the entry point.
+
+4. In the app's **Settings → Secrets**, add the asset's download URL:
+
+   ```toml
+   DEMO_BUNDLE_URL = "https://github.com/<you>/<repo>/releases/download/v1.0/demo_bundle.zip"
+   ```
+
+On boot, `ensure_demo_data()` in `app.py` sees the data is missing,
+downloads the bundle (a few seconds), and unpacks it. Locally this is a
+no-op because your full dataset is already in place. Note the demo
+deployment classifies uploads with the full-dataset model — only the
+*similarity library* is reduced to 72 sounds.
+

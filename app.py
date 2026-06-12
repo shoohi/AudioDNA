@@ -8,17 +8,22 @@ Run with:
 """
 
 import io
+import os
+import tempfile
+import zipfile
 
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import requests
 import streamlit as st
 
-from src.config import CATEGORIES, PROJECT_ROOT, SAMPLE_RATE
+from src.config import CATEGORIES, DB_PATH, PROJECT_ROOT, SAMPLE_RATE
 from src.features import TRIM_DB, features_from_audio
 from src.similarity import SimilarityIndex
+from src.train import MODEL_PATH
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
@@ -35,6 +40,32 @@ st.set_page_config(page_title="AudioDNA", page_icon="🎧", layout="wide")
 @st.cache_resource(show_spinner="Loading model and sound library...")
 def load_index() -> SimilarityIndex:
     return SimilarityIndex.load()
+
+
+def ensure_demo_data() -> None:
+    """Cloud-deployment support: the repo carries no audio/DB/model (all
+    gitignored), so on Streamlit Community Cloud we download a small demo
+    bundle (built by scripts/make_demo_bundle.py, hosted as a GitHub
+    Release asset) on first boot. Locally, where the full pipeline has
+    already produced these files, this is a no-op.
+    """
+    if DB_PATH.exists() and MODEL_PATH.exists():
+        return
+    url = os.getenv("DEMO_BUNDLE_URL", "")
+    if not url:
+        try:  # st.secrets raises if no secrets.toml exists at all
+            url = st.secrets.get("DEMO_BUNDLE_URL", "")
+        except Exception:
+            url = ""
+    if not url:
+        return  # no bundle configured -> the missing-model error below guides the user
+    with st.spinner("First boot: downloading demo dataset (~8 MB)..."):
+        resp = requests.get(url, timeout=120)
+        resp.raise_for_status()
+        with tempfile.TemporaryFile() as tmp:
+            tmp.write(resp.content)
+            with zipfile.ZipFile(tmp) as zf:
+                zf.extractall(PROJECT_ROOT)
 
 
 def license_label(url: str) -> str:
@@ -108,6 +139,7 @@ st.caption(
 )
 
 try:
+    ensure_demo_data()
     index = load_index()
 except FileNotFoundError:
     st.error(
