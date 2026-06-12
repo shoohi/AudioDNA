@@ -1,0 +1,4 @@
+[tool.pytest.ini_options]
+# Pin pytest's rootdir to this project (otherwise it can wander up the
+# directory tree looking for config) and only collect from tests/.
+testpaths = ["tests"]
