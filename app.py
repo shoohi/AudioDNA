@@ -86,6 +86,19 @@ def freesound_url(freesound_id: int) -> str:
     return f"https://freesound.org/s/{freesound_id}/"
 
 
+def resolve_audio_path(filepath: str):
+    """Turn a stored filepath into an absolute path that works on any OS.
+
+    The database is populated on Windows, so its `filepath` values use
+    backslashes (e.g. 'data\\raw\\impact\\660770.mp3'). On Linux — which is
+    what Streamlit Community Cloud runs — a backslash is NOT a path
+    separator but a literal filename character, so the file looks missing.
+    Replacing '\\' with '/' yields a path that resolves correctly on both
+    Windows and Linux.
+    """
+    return PROJECT_ROOT / filepath.replace("\\", "/")
+
+
 def attribution_line(row) -> str:
     """Markdown attribution: name, uploader, license, Freesound link."""
     return (
@@ -116,7 +129,7 @@ def render_similar_sounds(results: pd.DataFrame) -> None:
     for _, row in results.iterrows():
         left, right = st.columns([2, 3])
         with left:
-            audio_path = PROJECT_ROOT / row["filepath"]
+            audio_path = resolve_audio_path(row["filepath"])
             if audio_path.exists():
                 st.audio(str(audio_path))
             else:
@@ -220,7 +233,7 @@ with library_tab:
     for _, row in subset.iloc[start : start + PAGE_SIZE].iterrows():
         left, right = st.columns([2, 3])
         with left:
-            audio_path = PROJECT_ROOT / row["filepath"]
+            audio_path = resolve_audio_path(row["filepath"])
             if audio_path.exists():
                 st.audio(str(audio_path))
             else:

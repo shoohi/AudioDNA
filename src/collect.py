@@ -194,7 +194,10 @@ def collect_category(client: FreesoundClient, category: str, limit: int) -> int:
                             item.get("duration"),
                             # Store the path relative to the project root so
                             # the DB stays valid if the project folder moves.
-                            str(dest.relative_to(RAW_AUDIO_DIR.parent.parent)),
+                            # as_posix() forces forward slashes even on
+                            # Windows, so the DB is portable to Linux (e.g.
+                            # Streamlit Cloud) where '\\' isn't a separator.
+                            dest.relative_to(RAW_AUDIO_DIR.parent.parent).as_posix(),
                             datetime.now(timezone.utc).isoformat(timespec="seconds"),
                         ),
                     )
